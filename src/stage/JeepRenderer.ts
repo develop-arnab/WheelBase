@@ -176,10 +176,35 @@ export class JeepRenderer {
 
   /* ---------------- loading ---------------- */
 
-  async load(url: string) {
+  /** Loads the model. onProgress gets 0..1: the download is most of it, then textures. */
+  async load(url: string, onProgress?: (p: number) => void) {
     const res = await fetch(url)
     if (!res.ok) throw new Error(`Model request failed (${res.status})`)
-    const glb = parseGlb(await res.arrayBuffer())
+    const total = Number(res.headers.get('content-length')) || 0
+    let buffer: ArrayBuffer
+    if (onProgress && total && res.body) {
+      const reader = res.body.getReader()
+      const parts: Uint8Array[] = []
+      let got = 0
+      for (;;) {
+        const { done, value } = await reader.read()
+        if (done) break
+        parts.push(value)
+        got += value.length
+        onProgress(Math.min(0.9, (got / total) * 0.9))
+      }
+      const all = new Uint8Array(got)
+      let at = 0
+      for (const p of parts) {
+        all.set(p, at)
+        at += p.length
+      }
+      buffer = all.buffer
+    } else {
+      buffer = await res.arrayBuffer()
+    }
+    onProgress?.(0.92)
+    const glb = parseGlb(buffer)
     if (this.disposed) throw new Error('Renderer was disposed while loading')
     const gl = this.gl
 
@@ -216,6 +241,7 @@ export class JeepRenderer {
     }))
     if (this.disposed) throw new Error('Renderer was disposed while loading')
     this.ready = true
+    onProgress?.(1)
     this.shadowDirty = true
     this.invalidate()
   }
@@ -287,10 +313,33 @@ export class JeepRenderer {
     return this.u.get(key)!
   }
 
+  /* ---------------- stills ---------------- */
+
+  /** Points the camera with no animation. Used for still renders. */
+  pose(yaw: number, pitch: number, opts: { zoom?: number; ty?: number } = {}) {
+    this.camTween = null
+    this.vel = 0
+    this.autoRotate = false
+    this.yaw = yaw
+    this.pitch = pitch
+    this.zoom = opts.zoom ?? 1
+    this.ty = opts.ty ?? 0.95
+  }
+
+  /** Draws one frame immediately and returns it as an image with a clear background. */
+  still(type = 'image/webp', quality = 0.9) {
+    if (!this.ready) throw new Error('Model not loaded')
+    this.render()
+    return this.canvas.toDataURL(type, quality)
+  }
+
   /* ---------------- input ---------------- */
 
+  /** the one finger (or mouse) that is turning the Jeep; a second finger is ignored */
+  private dragId: number | null = null
   private onDown = (e: PointerEvent) => {
-    if (e.button !== 0) return
+    if (e.button !== 0 || this.dragId !== null) return
+    this.dragId = e.pointerId
     this.dragging = true
     this.camTween = null
     this.autoRotate = false
@@ -298,19 +347,28 @@ export class JeepRenderer {
     this.lastY = e.clientY
     this.lastMoveT = performance.now()
     this.vel = 0
-    this.canvas.setPointerCapture(e.pointerId)
+    try {
+      this.canvas.setPointerCapture(e.pointerId)
+    } catch {
+      /* a pointer the browser no longer tracks: drag without capture */
+    }
     this.canvas.addEventListener('pointermove', this.onMove)
     this.canvas.addEventListener('pointerup', this.onUp)
     this.canvas.addEventListener('pointercancel', this.onUp)
+    this.canvas.addEventListener('lostpointercapture', this.onUp)
     this.onInteract?.()
   }
   private onMove = (e: PointerEvent) => {
+    if (e.pointerId !== this.dragId) return
     const dx = e.clientX - this.lastX
     const dy = e.clientY - this.lastY
     const now = performance.now()
-    const d = -dx * 0.0085
+    // fingers cover less distance than a mouse on a small screen, so touch turns a little faster
+    const touch = e.pointerType !== 'mouse'
+    const d = -dx * (touch ? 0.011 : 0.0085)
     this.yaw += d
-    if (e.pointerType === 'mouse') this.pitch = clamp(this.pitch + dy * 0.004, 0.02, 0.62)
+    // up and down tilts the camera, from just above the sand to looking down on the roof
+    this.pitch = clamp(this.pitch + dy * (touch ? 0.006 : 0.004), 0.02, 1.15)
     this.vel = d / Math.max(8, now - this.lastMoveT)
     this.lastX = e.clientX
     this.lastY = e.clientY
@@ -318,12 +376,19 @@ export class JeepRenderer {
     this.invalidate()
   }
   private onUp = (e: PointerEvent) => {
+    if (e.pointerId !== this.dragId) return
+    this.dragId = null
     this.dragging = false
     if (performance.now() - this.lastMoveT > 80) this.vel = 0
-    this.canvas.releasePointerCapture?.(e.pointerId)
+    try {
+      this.canvas.releasePointerCapture?.(e.pointerId)
+    } catch {
+      /* already released */
+    }
     this.canvas.removeEventListener('pointermove', this.onMove)
     this.canvas.removeEventListener('pointerup', this.onUp)
     this.canvas.removeEventListener('pointercancel', this.onUp)
+    this.canvas.removeEventListener('lostpointercapture', this.onUp)
     this.invalidate()
   }
   private onVisibility = () => {

@@ -1,0 +1,100 @@
+.jloader {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: clamp(1rem, 3vh, 1.75rem);
+  pointer-events: none;
+  transition:
+    opacity 0.7s var(--ease-out),
+    scale 0.9s var(--ease-out);
+}
+.jloader[data-leaving] {
+  opacity: 0;
+  scale: 1.04;
+}
+.jloader__anim {
+  width: min(38rem, 72%);
+  aspect-ratio: 16 / 9;
+  opacity: 0;
+  transition: opacity 0.5s var(--ease-out);
+}
+.jloader__anim[data-shown] {
+  opacity: 1;
+}
+.jloader__anim svg {
+  display: block;
+  max-width: none;
+}
+
+.jloader__meta {
+  display: grid;
+  grid-template-columns: auto 7.5rem auto;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.45rem 0.9rem;
+  border-radius: var(--r-pill);
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 0 0 1px rgba(11, 37, 64, 0.06);
+  animation: jl-fade-in 0.6s 0.4s both;
+}
+@keyframes jl-fade-in {
+  from {
+    opacity: 0;
+    translate: 0 6px;
+  }
+}
+.jloader__text {
+  font-size: 0.98rem;
+  color: var(--ink-2);
+}
+.jloader__track {
+  position: relative;
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(11, 37, 64, 0.1);
+  overflow: hidden;
+}
+.jloader__track i {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--red);
+  transform-origin: left;
+  transition: transform 0.35s var(--ease-out);
+}
+.jloader__pct {
+  min-width: 2.6em;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+/* sit where the Jeep will appear: right of the headline on wide screens,
+   low in the frame on phones */
+@media (min-width: 1080px) {
+  .builder[data-mode='hero'] .jloader {
+    padding: 4% 0 0 44%;
+  }
+}
+@media (max-width: 1079px) and (min-height: 560px) {
+  .builder[data-mode='hero'] .jloader {
+    padding-top: 22%;
+  }
+}
+@media (max-width: 600px) {
+  .jloader__anim {
+    width: 96%;
+  }
+  .jloader__meta {
+    grid-template-columns: auto 4.5rem auto;
+    gap: 0.55rem;
+  }
+  .jloader__text {
+    font-size: 0.88rem;
+  }
+}

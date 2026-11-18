@@ -116,9 +116,31 @@ screen edges.
 
 ### Below the builder
 
-Places: the four pick-up points as crops of the route chart, with what is nearby, how many Jeeps are there and the lowest day rate. Choosing one starts the builder there.
+The lower page follows the coast down: paper (showroom), sea (chart), sand (the drive), paper,
+sea, then the beach. Every section uses the same heading system (src/styles/sections.css) and
+reveals once as it scrolls in (src/lib/reveal.ts; nothing moves with reduced motion).
 
-Then deliberately quiet: how pickup works (3 steps), about the company, the contact form, footer.
+1. **Fleet** (Fleet.tsx). All six paints as still renders of the same 3D model
+   (src/lib/stills.ts draws them once, on idle time, in a hidden renderer). Sky roof/hardtop
+   switch, where each colour is waiting, lowest day rate, Rubicon essentials. "Build this one"
+   opens the builder on that Jeep.
+2. **Places** (Places.tsx). A chart table: the four harbours listed, a large chart of the chosen
+   one with the spots marked, their notes, and "Start in ...". Tabs to swipe on phones.
+3. **How it works** (Info.tsx). Three stops on one road; a small Jeep drives it once.
+4. **About** (Info.tsx). Editorial copy, a logbook card of standards, a pull quote.
+5. **Contact** (Contact.tsx). A postcard: stamp with the red Jeep, quick choices for place and
+   group size. Not sending yet (next phase).
+6. **Closing band** (Finale.tsx). The beach again, the Jeep side-on, "Ready for your Cape and
+   Islands adventure?" and Build your trip.
+7. **Footer**. Explore, start a trip in each place, booking notes.
+
+#### Content the client still needs to supply (nothing here was invented)
+
+- Real reviews or testimonials (for a reviews section).
+- FAQ answers and policies: minimum age, deposit, insurance, cancellation, ferry rules.
+- Phone, email and office address for the contact section and footer.
+- Real fleet list, prices and Wheelbase rental IDs (replacing the 14 placeholder Jeeps).
+- Photos, if they want real photography alongside the 3D renders.
 
 ## How it's built
 

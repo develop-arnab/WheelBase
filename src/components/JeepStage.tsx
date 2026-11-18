@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { JeepRenderer, type View } from '../stage/JeepRenderer'
 import { Jeep } from './Jeep'
+import { JeepLoader } from './JeepLoader'
 import './JeepStage.css'
 
 /*
@@ -48,6 +49,15 @@ export function JeepStage({ paint, roof, roofOpen, accessories, view, present, i
   const r = useRef<JeepRenderer | null>(null)
   const [state, setState] = useState<'loading' | 'ready' | 'fallback'>('loading')
   const [touched, setTouched] = useState(false)
+  const [progress, setProgress] = useState(0)
+  // the loader stays a moment after the model is ready, so it can fade out under it
+  const [loaderLeaving, setLoaderLeaving] = useState(false)
+  useEffect(() => {
+    if (state !== 'ready') return
+    setLoaderLeaving(true)
+    const t = window.setTimeout(() => setLoaderLeaving(false), 900)
+    return () => window.clearTimeout(t)
+  }, [state])
   // previous values, so a change animates but a (StrictMode) remount does not
   const prev = useRef({ view, present })
   const props = useRef({ paint, roof, roofOpen, accessories, view, present, idleSpin, label, shift, zoomBias, lift, onTouched })
@@ -90,7 +100,7 @@ export function JeepStage({ paint, roof, roofOpen, accessories, view, present, i
       props.current.onTouched?.()
     }
     setState('loading')
-    renderer.load(MODEL_URL()).then(
+    renderer.load(MODEL_URL(), (p) => live && setProgress(p)).then(
       () => live && setState('ready'),
       () => live && setState('fallback'),
     )
@@ -127,8 +137,9 @@ export function JeepStage({ paint, roof, roofOpen, accessories, view, present, i
 
   return (
     <div className="jstage" data-state={state} ref={host}>
-      {state !== 'ready' && (
-        <div className="jstage__fallback" aria-hidden={state === 'loading'}>
+      {(state === 'loading' || loaderLeaving) && <JeepLoader progress={state === 'ready' ? 1 : progress} leaving={state === 'ready'} />}
+      {state === 'fallback' && (
+        <div className="jstage__fallback">
           <Jeep paint={paint} roof={roofOpen ? 'open' : 'closed'} />
         </div>
       )}

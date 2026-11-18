@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { baseById, type BaseId } from '../data/places'
 import { formatShort } from '../lib/dates'
@@ -120,8 +120,8 @@ export function Hero({ onStart }: { onStart: () => void }) {
     <div className="hero" data-planning={(panel && wide) || undefined}>
       <div className="hero__head">
         <div className="hero__words" aria-hidden={(panel && wide) || undefined}>
-          <p className="hero__kicker chart-voice">Ready for your Cape and Islands adventure?</p>
-          <h1 className="hero__title display">For when “a rental car” just won’t do.</h1>
+          <p className="hero__kicker chart-voice">Luxury 2025–2026 Jeep Wrangler Rubicons</p>
+          <h1 className="hero__title display">Ready for your Cape and Islands adventure?</h1>
           <p className="hero__lede">
             Brand-new Jeep Wrangler Rubicons, waiting for you on Nantucket, Martha’s Vineyard, Cape Cod and in Boston. Choose yours, kit it out for the beach and plan the drive.
           </p>
@@ -280,14 +280,47 @@ function Dune({ side, seed }: { side: 'left' | 'right'; seed: number }) {
   )
 }
 
+/** a soft cumulus: overlapping puffs, lit from above, edges blurred */
+function Cloud({ className }: { className: string }) {
+  const id = useId().replace(/:/g, '')
+  return (
+    <svg className={`set__cloud ${className}`} viewBox="0 0 220 90" aria-hidden="true">
+      <defs>
+        <linearGradient id={`${id}g`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#ffffff" />
+          <stop offset="0.6" stopColor="#f6f9fb" />
+          <stop offset="1" stopColor="#d9e6ef" />
+        </linearGradient>
+        <filter id={`${id}f`} x="-20%" y="-30%" width="140%" height="160%">
+          <feGaussianBlur stdDeviation="2.4" />
+        </filter>
+      </defs>
+      <g fill={`url(#${id}g)`} filter={`url(#${id}f)`}>
+        <ellipse cx="110" cy="66" rx="98" ry="18" />
+        <circle cx="72" cy="52" r="26" />
+        <circle cx="112" cy="40" r="34" />
+        <circle cx="152" cy="54" r="24" />
+        <circle cx="44" cy="62" r="16" />
+        <circle cx="180" cy="64" r="14" />
+      </g>
+    </svg>
+  )
+}
+
 export function Scenery() {
   return (
     <div className="set" aria-hidden="true">
       <div className="set__sky">
         <div className="set__sun" />
-        <div className="set__cloud set__cloud--a" />
-        <div className="set__cloud set__cloud--b" />
-        <div className="set__cloud set__cloud--c" />
+        <Cloud className="set__cloud--a" />
+        <Cloud className="set__cloud--b" />
+        <Cloud className="set__cloud--c" />
+        <Cloud className="set__cloud--d" />
+        <svg className="set__gulls" viewBox="0 0 60 24">
+          <path className="set__gull" d="M2 10 Q7 3 12 10 Q17 3 22 10" />
+          <path className="set__gull set__gull--2" d="M34 16 Q38 10 42 16 Q46 10 50 16" />
+        </svg>
+        <div className="set__haze" />
       </div>
       <svg className="set__far set__far--left" viewBox="0 0 300 30" preserveAspectRatio="xMinYMax meet">
         <path d="M0 30 C40 22 80 19 130 18 C170 17 200 21 240 25 C265 27 285 29 300 30 Z" />
@@ -301,6 +334,7 @@ export function Scenery() {
         <path d="M0 30 C60 25 110 23 170 24 C220 25 260 27 300 30 Z" />
       </svg>
       <div className="set__sea">
+        <div className="set__glitter" />
         <svg className="set__sail" viewBox="0 0 20 22">
           <path d="M10 0 L10 17 L2 17 Z" />
           <path d="M11 3 L11 17 L17 17 Z" opacity="0.8" />
@@ -308,12 +342,16 @@ export function Scenery() {
         </svg>
       </div>
       <div className="set__sand" />
+      <svg className="set__surf set__surf--back" viewBox="0 0 1200 20" preserveAspectRatio="none">
+        <path className="set__surf-line" d="M0 8 C80 4 160 12 260 8 S420 4 520 9 S700 13 800 7 S980 3 1080 9 S1160 11 1200 8" />
+      </svg>
       <svg className="set__surf" viewBox="0 0 1200 20" preserveAspectRatio="none">
         <path className="set__surf-wash" d="M0 6 C60 2 120 11 200 7 S330 3 420 8 S560 12 660 6 S820 2 920 8 S1100 11 1200 6 L1200 20 L0 20 Z" />
         <path className="set__surf-line" d="M0 6 C60 2 120 11 200 7 S330 3 420 8 S560 12 660 6 S820 2 920 8 S1100 11 1200 6" />
       </svg>
       <Dune side="left" seed={2} />
       <Dune side="right" seed={1} />
+      <div className="set__vignette" />
     </div>
   )
 }

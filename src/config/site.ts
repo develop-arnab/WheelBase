@@ -3,10 +3,11 @@
 */
 export const site = {
   name: 'Premium Jeep Rentals',
-  tagline: 'For when “a rental car” just won’t do.',
+  tagline: 'Sun, sand, and amazing summer memories.',
   legalName: 'DWPT LLC',
   region: 'Boston, Cape Cod, Nantucket and Martha’s Vineyard',
   nav: [
+    { label: 'Fleet', href: '#fleet' },
     { label: 'Places', href: '#places' },
     { label: 'How it works', href: '#how' },
     { label: 'About', href: '#about' },

@@ -91,8 +91,12 @@ function reducer(s: TripState, a: Action): TripState {
       if (v.roof !== a.roof) return s
       return { ...s, paint: v.paint, roof: v.roof, roofOpen: a.roof === 'hardtop' ? false : s.roofOpen }
     }
-    case 'vehicle':
-      return { ...s, base: a.vehicle.base, paint: a.vehicle.paint, roof: a.vehicle.roof }
+    case 'vehicle': {
+      // stops on another island can't be reached from the new pick-up
+      const island = baseById(a.vehicle.base).island
+      const stops = a.vehicle.base === s.base ? s.stops : s.stops.filter((id) => spotById(id).island === island)
+      return { ...s, base: a.vehicle.base, paint: a.vehicle.paint, roof: a.vehicle.roof, stops }
+    }
     case 'roofOpen':
       return { ...s, roofOpen: a.open }
     case 'extra': {

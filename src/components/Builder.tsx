@@ -92,7 +92,7 @@ export function Builder() {
 
   return (
     <section className="builder" id="build" ref={root} data-mode={hero ? 'hero' : 'build'} data-step={s.step} data-set aria-label="Build your trip">
-      <div className="builder__stage" data-map={mapShown || undefined}>
+      <div className="builder__stage" data-map={mapShown || undefined} data-loading={stageState === 'loading' || undefined}>
         <div className="studio" aria-hidden={mapShown}>
           <Scenery />
           <JeepStage

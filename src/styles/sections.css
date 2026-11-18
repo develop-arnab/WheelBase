@@ -1,0 +1,91 @@
+/*
+  The lower page: one section system.
+
+  Surfaces follow the coast as the page goes down: paper (the showroom),
+  sea (the chart), sand (the drive), paper again, then the beach at the end.
+  Headings use the same display face as the first screen, so the page reads
+  as one piece.
+*/
+
+.sect {
+  position: relative;
+  padding-block: var(--section);
+}
+.sect--paper {
+  background: var(--paper);
+}
+.sect--sea {
+  background: linear-gradient(180deg, #eaf2f7 0%, #e3edf4 100%);
+}
+.sect--sand {
+  background: linear-gradient(180deg, #f6f0e3 0%, #f2ead8 100%);
+}
+.sect--fog {
+  background: var(--fog);
+}
+
+.shead {
+  display: grid;
+  gap: clamp(0.9rem, 1.6vw, 1.25rem);
+  max-width: 48rem;
+  margin-bottom: clamp(2.5rem, 5vw, 4rem);
+}
+.shead--split {
+  max-width: none;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  align-items: end;
+  column-gap: clamp(2rem, 6vw, 6rem);
+}
+.shead__title {
+  font-size: clamp(2.35rem, 1.3rem + 3.4vw, 4.4rem);
+  font-weight: 800;
+  font-stretch: 116%;
+  letter-spacing: -0.028em;
+  line-height: 0.98;
+  text-wrap: balance;
+}
+.shead__lede {
+  max-width: 34em;
+  font-size: var(--step-1);
+  line-height: 1.5;
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
+@media (max-width: 860px) {
+  .shead--split {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* the coast line where the sea section meets the sand one */
+.shore {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -1px;
+  height: clamp(18px, 2.4vw, 34px);
+  width: 100%;
+  display: block;
+  pointer-events: none;
+}
+
+/* reveal: once, as a section arrives */
+[data-reveal] {
+  opacity: 0;
+  translate: 0 18px;
+  transition:
+    opacity 0.8s var(--ease-out) var(--d, 0s),
+    translate 0.9s var(--ease-out) var(--d, 0s);
+}
+[data-shown] [data-reveal],
+[data-reveal][data-shown] {
+  opacity: 1;
+  translate: none;
+}
+@media print, (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    opacity: 1;
+    translate: none;
+    transition: none;
+  }
+}

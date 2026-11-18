@@ -26,6 +26,11 @@ const paths: Record<string, string> = {
   chevron: 'm6 9 6 6 6-6',
   front: 'M5 17V9l2-3h10l2 3v8M5 13h14M8 17v2M16 17v2M8 10h.01M16 10h.01',
   rotate: 'M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3M18 3v4h-4M6 21v-4h4',
+  axle: 'M5 7v10M19 7v10M5 12h14M3 7h4M3 17h4M17 7h4M17 17h4',
+  key: 'M8.5 15.5a4.5 4.5 0 1 1 3.2-1.3L20 6M16.5 9.5l2 2M18.5 7.5l2 2',
+  mail: 'M3 6h18v12H3zM3 7l9 6.5L21 7',
+  sun: 'M12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4',
+  people: 'M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7ZM2.5 20c.5-3.5 3.2-6 6.5-6s6 2.5 6.5 6M16 4.5a3.5 3.5 0 0 1 0 6.5M18 14c2 .7 3.3 3 3.5 6',
 }
 
 export type IconName = keyof typeof paths
