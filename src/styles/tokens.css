@@ -1,0 +1,66 @@
+/*
+  Design tokens — Premium Jeep Rentals
+  Palette is taken from the Cape & Islands themselves: fog, Atlantic navy,
+  hydrangea, Nantucket red, dune sand, beach grass. Light theme only.
+*/
+:root {
+  /* Surfaces */
+  --fog: #f3f6f8;
+  --paper: #ffffff;
+  --mist: #e8eef2;
+
+  /* Ink */
+  --ink: #0b2540;
+  --ink-2: #3a4f66;
+  --ink-3: #6b7d8f;
+  --line: #d6dfe7;
+
+  /* Water */
+  --sea-1: #dfeaf2;
+  --sea-2: #c9dcea;
+  --sea-3: #a9c7dc;
+  --hydrangea: #4563d6;
+  --hydrangea-ink: #2e47a8;
+
+  /* Land */
+  --sand: #efe6d0;
+  --sand-2: #e2d4b1;
+  --sand-3: #cdbb90;
+  --grass: #6c8b5a;
+
+  /* Spark: Nantucket red. Booking actions only. */
+  --red: #c2413b;
+  --red-deep: #a3312c;
+
+  /* Type */
+  --font-sans: 'Archivo', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-chart: 'Newsreader', 'Iowan Old Style', Georgia, serif;
+
+  --step--1: clamp(0.8rem, 0.78rem + 0.1vw, 0.875rem);
+  --step-0: clamp(1rem, 0.97rem + 0.15vw, 1.0625rem);
+  --step-1: clamp(1.15rem, 1.08rem + 0.35vw, 1.375rem);
+  --step-2: clamp(1.45rem, 1.25rem + 0.9vw, 2rem);
+  --step-3: clamp(2rem, 1.5rem + 2.2vw, 3.5rem);
+  --step-4: clamp(2.5rem, 1.6rem + 4.2vw, 5.75rem);
+
+  /* Space */
+  --gutter: clamp(1.25rem, 4vw, 4rem);
+  --section: clamp(5rem, 10vw, 9.5rem);
+  --max: 82rem;
+
+  /* Shape. Controls are pills, panels are soft, the chart is square-cut. */
+  --r-pill: 999px;
+  --r-panel: 22px;
+  --r-small: 10px;
+
+  /* Elevation, tinted with the ink colour rather than neutral grey */
+  --shadow-1: 0 1px 2px rgba(11, 37, 64, 0.06), 0 6px 18px -8px rgba(11, 37, 64, 0.18);
+  --shadow-2: 0 2px 4px rgba(11, 37, 64, 0.05), 0 24px 48px -20px rgba(11, 37, 64, 0.32);
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-drive: cubic-bezier(0.3, 0.7, 0.2, 1);
+  --ease-spring: cubic-bezier(0.34, 1.4, 0.5, 1);
+
+  --header-h: 4rem;
+}

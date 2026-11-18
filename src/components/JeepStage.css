@@ -1,0 +1,63 @@
+.jstage {
+  position: absolute;
+  inset: 0;
+}
+.jstage__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: pan-y;
+  cursor: grab;
+  opacity: 0;
+  transition: opacity 0.8s var(--ease-out);
+}
+.jstage__canvas:active {
+  cursor: grabbing;
+}
+.jstage[data-state='ready'] .jstage__canvas {
+  opacity: 1;
+}
+.jstage__fallback {
+  position: absolute;
+  inset: 18% 10% 22%;
+  display: grid;
+  place-items: center;
+  transition: opacity 0.5s;
+}
+.jstage[data-state='loading'] .jstage__fallback {
+  opacity: 0.25;
+  filter: grayscale(1);
+  animation: jstage-breathe 1.6s ease-in-out infinite alternate;
+}
+@keyframes jstage-breathe {
+  to {
+    opacity: 0.12;
+  }
+}
+.jstage__hint {
+  position: absolute;
+  left: 50%;
+  bottom: 1.1rem;
+  translate: -50% 0;
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--r-pill);
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 0 0 1px var(--line);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ink-2);
+  pointer-events: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  animation: jstage-hint 0.6s 1.2s both;
+  white-space: nowrap;
+}
+@keyframes jstage-hint {
+  from {
+    opacity: 0;
+    translate: -50% 6px;
+  }
+}

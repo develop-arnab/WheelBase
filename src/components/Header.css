@@ -1,0 +1,216 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  height: var(--header-h);
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(14px) saturate(1.4);
+  box-shadow: 0 1px 0 var(--line);
+  transition:
+    background-color 0.4s,
+    box-shadow 0.4s;
+}
+.header__bar {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  height: 100%;
+  padding-inline: clamp(1rem, 2.5vw, 1.75rem);
+}
+.header__home {
+  text-decoration: none;
+  margin-right: auto;
+}
+
+.wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  color: var(--ink);
+}
+.wordmark svg {
+  flex: none;
+  transition: transform 0.9s var(--ease-spring);
+}
+a:hover > .wordmark svg {
+  transform: rotate(135deg);
+}
+.wordmark__text {
+  font-weight: 800;
+  font-stretch: 118%;
+  font-size: 1.02rem;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  white-space: nowrap;
+}
+.wordmark__text span {
+  font-family: var(--font-chart);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.12em;
+  letter-spacing: 0;
+}
+
+.header__nav {
+  display: flex;
+  gap: 1.75rem;
+}
+.header__nav a {
+  position: relative;
+  padding-block: 0.4rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--ink-2);
+  transition: color 0.2s;
+}
+.header__nav a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: var(--ink);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s var(--ease-out);
+}
+.header__nav a:hover {
+  color: var(--ink);
+}
+.header__nav a:hover::after {
+  transform: scaleX(1);
+}
+
+.header__cta {
+  max-width: 14rem;
+  overflow: hidden;
+  transition:
+    opacity 0.3s,
+    max-width 0.45s var(--ease-out),
+    padding 0.45s var(--ease-out),
+    margin 0.45s var(--ease-out),
+    visibility 0s;
+}
+.header__cta[data-hidden] {
+  opacity: 0;
+  max-width: 0;
+  padding-inline: 0;
+  margin-left: -2rem;
+  visibility: hidden;
+  transition:
+    opacity 0.2s,
+    max-width 0.45s var(--ease-out),
+    padding 0.45s var(--ease-out),
+    margin 0.45s var(--ease-out),
+    visibility 0s 0.45s;
+}
+.header__cta-short,
+.header__menucta {
+  display: none;
+}
+@media (max-width: 520px) {
+  .header__cta-long {
+    display: none;
+  }
+  .header__cta-short {
+    display: inline;
+  }
+}
+.header__burger {
+  display: none;
+  position: relative;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  background: var(--paper);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+.header__burger span {
+  position: absolute;
+  left: 0.8rem;
+  right: 0.8rem;
+  top: 50%;
+  height: 2px;
+  margin-top: -1px;
+  border-radius: 2px;
+  background: var(--ink);
+  transition: transform 0.4s var(--ease-out);
+}
+.header__burger span:first-child {
+  transform: translateY(-4px);
+}
+.header__burger span:last-child {
+  transform: translateY(4px);
+}
+.header[data-menu] .header__burger span:first-child {
+  transform: rotate(45deg);
+}
+.header[data-menu] .header__burger span:last-child {
+  transform: rotate(-45deg);
+}
+
+@media (max-width: 760px) {
+  .header__burger {
+    display: block;
+  }
+  .header__bar {
+    gap: 0.75rem;
+  }
+  .header__cta {
+    padding-inline: 0.9rem;
+  }
+  .header__home {
+    min-width: 0;
+  }
+  .header__menucta {
+    display: inline-flex;
+    align-self: flex-start;
+    margin-top: 1.5rem;
+    min-height: 3.4rem;
+    padding-inline: 1.75rem;
+    font-size: 1.05rem;
+  }
+  .header__nav {
+    position: absolute;
+    top: var(--header-h);
+    left: 0;
+    right: 0;
+    height: calc(100svh - var(--header-h));
+    z-index: -1;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.25rem;
+    padding: var(--gutter);
+    background: var(--fog);
+    clip-path: circle(0 at calc(100% - 2.5rem) 0);
+    visibility: hidden;
+    transition:
+      clip-path 0.6s var(--ease-out),
+      visibility 0s 0.6s;
+  }
+  .header[data-menu] .header__nav {
+    clip-path: circle(150% at calc(100% - 2.5rem) 0);
+    visibility: visible;
+    transition:
+      clip-path 0.7s var(--ease-out),
+      visibility 0s;
+  }
+  .header__nav a {
+    font-size: clamp(2rem, 9vw, 3rem);
+    font-weight: 800;
+    font-stretch: 116%;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+  }
+  .header__nav a::after {
+    display: none;
+  }
+}
+/* the smallest phones: the wordmark needs the room; the menu carries the button */
+@media (max-width: 400px) {
+  .header__cta {
+    display: none;
+  }
+}

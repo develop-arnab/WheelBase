@@ -1,0 +1,340 @@
+.rmap {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--sea-1);
+  user-select: none;
+}
+.rmap__svg {
+  --z: 1;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.rmap__shoal path {
+  fill: none;
+  stroke-linejoin: round;
+}
+.rmap__land path,
+.rmap__land ellipse {
+  fill: #efe6d0;
+  stroke: #cdbb90;
+  stroke-width: 1.2;
+  vector-effect: non-scaling-stroke;
+}
+.rmap__waters text {
+  font-family: var(--font-chart);
+  font-style: italic;
+  font-size: calc(17px * var(--fs) * var(--z));
+  fill: var(--hydrangea-ink);
+  fill-opacity: 0.55;
+  letter-spacing: 0.04em;
+}
+
+/* roads: white on a sandy casing, like a road atlas */
+.rmap__roads path {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+.rmap__casing {
+  stroke: #d8c9a4;
+  stroke-width: 5;
+}
+.rmap__casing--highway {
+  stroke-width: 6.5;
+}
+.rmap__road {
+  stroke: #fff;
+  stroke-width: 3;
+}
+.rmap__road--highway {
+  stroke: #fffaf0;
+  stroke-width: 4.2;
+}
+.rmap__road--sand {
+  stroke: #b59a62;
+  stroke-width: 2.2;
+  stroke-dasharray: 2 5;
+}
+.rmap__casing--sand {
+  stroke: transparent;
+}
+.rmap__road--ferry {
+  stroke: var(--ink-2);
+  stroke-width: 1.6;
+  stroke-dasharray: 1 6;
+}
+
+/* the plotted route */
+.rmap__route path {
+  fill: none;
+  stroke: var(--red);
+  stroke-width: 4.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  animation: route-in 0.35s both;
+}
+.rmap__route path.is-return {
+  stroke-width: 3;
+  stroke-dasharray: 2 8;
+  stroke-opacity: 0.7;
+}
+.rmap__route path.is-live {
+  animation: none;
+}
+@keyframes route-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* ---------- pins ---------- */
+
+.rmap__pins {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.rpin {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  pointer-events: auto;
+  will-change: transform;
+}
+.rpin::before {
+  content: '';
+  position: absolute;
+  inset: -22px;
+  border-radius: 50%;
+}
+.rpin__dot {
+  position: absolute;
+  left: -15px;
+  top: -15px;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow:
+    0 0 0 1.5px var(--ink),
+    0 3px 8px rgba(11, 37, 64, 0.22);
+  font-size: 0.82rem;
+  font-weight: 800;
+  transition:
+    transform 0.35s var(--ease-spring),
+    background-color 0.2s,
+    color 0.2s,
+    box-shadow 0.2s;
+}
+.rpin:hover .rpin__dot,
+.rpin[data-focus] .rpin__dot {
+  transform: scale(1.15);
+}
+.rpin[data-on] .rpin__dot {
+  background: var(--red);
+  color: #fff;
+  box-shadow:
+    0 0 0 2px #fff,
+    0 4px 12px rgba(194, 65, 59, 0.55);
+  animation: pin-stamp 0.45s var(--ease-spring);
+}
+@keyframes pin-stamp {
+  from {
+    transform: scale(1.6);
+  }
+}
+.rpin[data-far] .rpin__dot {
+  opacity: 0.8;
+}
+.rpin:focus-visible {
+  outline: none;
+}
+.rpin:focus-visible .rpin__dot {
+  outline: 2.5px solid var(--hydrangea);
+  outline-offset: 3px;
+}
+
+.rpin__label {
+  position: absolute;
+  left: 20px;
+  top: -9px;
+  white-space: nowrap;
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--ink);
+  text-shadow:
+    0 0 3px #efe6d0,
+    0 0 3px #efe6d0,
+    0 0 6px #fff;
+  opacity: 0;
+  transition: opacity 0.25s;
+  pointer-events: none;
+}
+.rmap[data-near='true'] .rpin__label,
+.rpin[data-on] .rpin__label,
+.rpin[data-focus] .rpin__label,
+.rpin--start .rpin__label {
+  opacity: 1;
+}
+.rpin__label small {
+  display: block;
+  font-family: var(--font-chart);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 0.95em;
+  color: var(--ink-2);
+}
+
+.rpin--start .rpin__dot {
+  width: 34px;
+  height: 34px;
+  left: -17px;
+  top: -17px;
+  background: var(--ink);
+  color: #fff;
+  box-shadow:
+    0 0 0 3px #fff,
+    0 4px 12px rgba(11, 37, 64, 0.35);
+}
+.rpin--start .rpin__label {
+  left: 24px;
+  top: -12px;
+  font-size: 0.86rem;
+}
+.rpin[data-left] .rpin__label {
+  left: auto;
+  right: 20px;
+  text-align: right;
+}
+.rpin--start[data-left] .rpin__label {
+  right: 24px;
+}
+.rpin[data-edge='l'] .rpin__label {
+  left: 20px;
+  right: auto;
+  text-align: left;
+}
+.rpin[data-edge='r'] .rpin__label {
+  left: auto;
+  right: 20px;
+  text-align: right;
+}
+.rpin--start[data-edge='l'] .rpin__label {
+  left: 24px;
+}
+.rpin--start[data-edge='r'] .rpin__label {
+  right: 24px;
+}
+
+/* ---------- the Jeep ---------- */
+
+.rmarker {
+  --heading: 0deg;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  z-index: 2;
+  will-change: transform;
+}
+.rmarker svg {
+  position: absolute;
+  max-width: none;
+  left: -17px;
+  top: -10px;
+  transform: rotate(var(--heading));
+  filter: drop-shadow(0 3px 3px rgba(11, 37, 64, 0.35));
+  transition: opacity 0.2s;
+}
+.rmarker__ferry {
+  opacity: 0;
+}
+.rmarker[data-ferry='true'] .rmarker__jeep {
+  opacity: 0;
+}
+.rmarker[data-ferry='true'] .rmarker__ferry {
+  opacity: 1;
+}
+
+/* ---------- tools ---------- */
+
+.rmap__tools {
+  position: absolute;
+  top: 0.9rem;
+  right: 0.9rem;
+}
+.rmap__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 2.4rem;
+  padding: 0 0.95rem;
+  border-radius: var(--r-pill);
+  background: var(--paper);
+  box-shadow: var(--shadow-1), 0 0 0 1px var(--line);
+  font-size: var(--step--1);
+  font-weight: 650;
+}
+.rmap__btn:hover {
+  box-shadow: var(--shadow-1), 0 0 0 1px var(--ink-3);
+}
+.rmap__legend {
+  position: absolute;
+  left: 0.9rem;
+  bottom: 0.9rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: var(--r-small);
+  background: rgba(255, 255, 255, 0.85);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--ink-2);
+}
+.rmap__legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.rmap__legend i {
+  width: 22px;
+  height: 0;
+}
+.rmap__legend .is-ferry {
+  border-top: 2px dotted var(--ink-2);
+}
+.rmap__legend .is-sand {
+  border-top: 2px dashed #b59a62;
+}
+
+@media (max-width: 720px) {
+  .rmap__legend {
+    display: none;
+  }
+  .rmap__tools {
+    top: 0.6rem;
+    right: 0.6rem;
+  }
+  .rmap__btn {
+    min-height: 2.1rem;
+    padding: 0 0.75rem;
+    font-size: 0.78rem;
+  }
+  .rpin__label {
+    font-size: 0.7rem;
+  }
+}
